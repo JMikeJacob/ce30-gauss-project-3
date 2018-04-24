@@ -24,7 +24,7 @@ class Matrix
     int identifyPivot(int, int);
     int gaussElim();
     void solveSystem();
-    void printSolutions();
+//    void printSolutions();
     int checkZeroRows(int);
 };
 

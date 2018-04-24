@@ -75,11 +75,26 @@ int Matrix::checkZeroRows(int midRow)
       if(cell[i][j] == 0)
       {
         countZeroes++; 
+      }
+      else
+      {
+        break;
       } 
     }
     if(countZeroes == cols - midRow)
-    { // 0 = 0 
-      return 1; 
+    { // 0 = 0
+      if(rows - 1 < cols - 1)
+      {
+        return 1; 
+      }
+      else
+      {
+        switchRows(rows-1, i);
+        rows--;
+	cout << "0 = 0 detected. System can still have unique solution!" << endl;
+	cout << "Remove 0 = 0 Row: " << endl;
+	printMatrix();
+      }
     }
     else if(countZeroes == cols - midRow - 1)
     { //k = 0, k =/= 0
@@ -91,7 +106,7 @@ int Matrix::checkZeroRows(int midRow)
 
 int Matrix::gaussElim()
 { //special cases: duplicate eqns, 0 = 0 (inf), k = 0 (none)
-  int pivotRow = 0, zeroCase = 0;
+  int pivotRow = 0, zeroCase = 0, zeroPos = 0;
   double factorToZero = 0;
   double epsilon = 1.00e-6;
   for(int i = 0; i < rows - 1; i++)
@@ -154,9 +169,10 @@ void Matrix::solveSystem()
     for(int j = i+1; j < cols - 1; j++)
     {
       solutions[i] -= cell[i][j]*solutions[j] / cell[i][i]; 
-    } 
+    }
+    cout << "x" << rows - i << " = " << solutions[i] << endl; 
   }
-  printSolutions(); 
+  //printSolutions(); 
 }
 
 void Matrix::printMatrix()
@@ -168,15 +184,6 @@ void Matrix::printMatrix()
       cout << cell[i][j] << " "; 
     }
     cout << endl; 
-  } 
-}
-
-void Matrix::printSolutions()
-{
-  for(int i = 0; i < rows; i++)
-  {
-    cout << "x" << rows - i << " = ";
-    cout << solutions[i] << endl;; 
   } 
 }
 

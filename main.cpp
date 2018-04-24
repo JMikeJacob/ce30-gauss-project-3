@@ -8,21 +8,22 @@ int readFromFile(Matrix&);
 
 int readFromFile(Matrix& GaussMatrix)
 {
-  int rows = 3;
+  int rows = 4;
   int cols = 4;
-  double test[3][4] = {{1,-1,2,-3},
-                       {4,4,-2,1},
-                       {-2,2,-4,6}};
-  GaussMatrix.initMatrix(3,4);
-  for(int i = 0; i < 3; i++)
+  double test[4][4] = {{9,3,4,7},
+                       {4,3,4,8},
+                       {1,1,1,3},
+                       {2,2,2,6}};
+  GaussMatrix.initMatrix(4,4);
+  for(int i = 0; i < 4; i++)
   {
     for(int j = 0; j < 4; j++)
     {
       GaussMatrix.insertElement(i, j, test[i][j]);
     } 
   }
-  if(rows < cols - 1) return 1;
-  else if (rows > cols - 1) return 2;
+  //if(rows < cols - 1) return 1;
+  //else if (rows > cols - 1) return 2;
   return 0;
 }
 int main(int argc, char *argv[])
@@ -33,7 +34,7 @@ int main(int argc, char *argv[])
   GaussMatrix.printMatrix();
   if(systemCase == 1)
   {
-    cout << "Infinite solutions!" << endl;
+    cout << "No unique solution!" << endl;
     cout << "Less equations than variables detected." << endl;
     return 0;
   }
