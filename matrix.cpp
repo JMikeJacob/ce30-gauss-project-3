@@ -5,19 +5,6 @@ double Matrix::absv(double value)
   return value*((value > 0) - (value < 0)); 
 }
 
-void Matrix::emptyMatrix()
-{
-  for(int i = 0; i < rows; i++)
-  {
-    for(int j = 0; j < cols; j++)
-    {
-       cell[i][j] = 0;   
-    }
-    solutions[i] = 0; 
-  }
-
-}
-
 void Matrix::initMatrix(int rowS, int colS)
 {
   rows = rowS;
@@ -28,7 +15,6 @@ void Matrix::initMatrix(int rowS, int colS)
     cell[i] = new double[cols];
   }
   solutions = new double[rows];
-  emptyMatrix();
 }
 
 void Matrix::insertElement(int rowE, int colE, double value)
@@ -60,6 +46,10 @@ int Matrix::identifyPivot(int midRow, int pivotCol)
       pivot = absv(cell[i][pivotCol]);
       pivotPosition = i;
     }
+  }
+  if(pivot == 0.0)
+  {
+    return -1;
   }
   return pivotPosition;
 }
@@ -99,15 +89,15 @@ int Matrix::checkZeroRows(int midRow)
     else if(countZeroes == cols - midRow - 1)
     { //k = 0, k =/= 0
       return 2; 
-    }   
+     }   
   }
   return 0;
 }
 
 int Matrix::gaussElim()
 { //special cases: duplicate eqns, 0 = 0 (inf), k = 0 (none)
-  int pivotRow = 0, zeroCase = 0, zeroPos = 0;
-  double factorToZero = 0;
+  int pivotRow = 0, zeroCase = 0, zeroPos = 0, pivotCol = 0;
+  double factorToZero = 0.0;
   double epsilon = 1.00e-6;
   for(int i = 0; i < rows - 1; i++)
   {
@@ -120,7 +110,19 @@ int Matrix::gaussElim()
     {
       return 2; 
     }
-    pivotRow = identifyPivot(i, i);
+    pivotCol = i;
+    do
+    {
+      pivotRow = identifyPivot(i, pivotCol);
+      if(pivotRow == -1)
+      {
+        pivotCol++;
+        if(pivotCol == cols - 1)
+        {
+          return 1; 
+        }
+      }
+    } while(pivotRow == -1);
     if(pivotRow != i)
     {
       switchRows(i, pivotRow); 
@@ -130,12 +132,12 @@ int Matrix::gaussElim()
     printMatrix();
     for(int j = i + 1; j < rows; j++)
     {
-      if(cell[j][i] == 0)
+      if(cell[j][pivotCol] == 0)
       {
         continue;
       }
-      factorToZero = cell[j][i] / cell[i][i];
-      for(int k = i; k < cols; k++)
+      factorToZero = cell[j][pivotCol] / cell[i][pivotCol];
+      for(int k = pivotCol; k < cols; k++)
       {
         cell[j][k] -= factorToZero*cell[i][k]; 
         if(absv(cell[j][k]) < epsilon)
@@ -144,20 +146,12 @@ int Matrix::gaussElim()
         } 
       }
     }
-    cout << "\nReduce Column " << i << " to Zero: " << endl;
+    cout << "\nReduce Column " << pivotCol << " to Zero: " << endl;
     printMatrix();
     cout << endl;
   }
   zeroCase = checkZeroRows(rows-1);
-  if(zeroCase == 1)
-  {
-    return 1; 
-  }
-  else if(zeroCase == 2)
-  {
-    return 2; 
-  }
-  return 0; 
+  return zeroCase; 
 }
 
 void Matrix::solveSystem()

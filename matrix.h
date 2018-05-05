@@ -15,7 +15,6 @@ class Matrix
     double* solutions;
   public:
     double absv(double value);
-    void emptyMatrix();
     void initMatrix(int, int);
     void printMatrix();
     void insertElement(int, int, double);
