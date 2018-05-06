@@ -8,7 +8,38 @@ int readFromFile(Matrix&);
 
 int readFromFile(Matrix& GaussMatrix)
 {
-  int rows = 3;
+    int rows, cols;
+    const char * filename;
+    cout << "Filename: ";
+    cin >> filename;
+    
+    ifstream is(filename);
+
+    if (!is)
+    {
+        cout << "Unable to open file: " << filename << endl;
+        return 1;
+    }
+
+    int rows = 0, cols = 0;
+
+    if (!(is >> rows >> cols))
+        cout << "Error reading dimensions" << endl;
+    else
+        cout << "Rows: " << rows << "  Columns: " << cols << endl;
+
+    GaussMatrix.initMatrix(rows,cols)
+    
+    // Read the data
+    for (int i = 0; i<rows; i++)
+        for (int j=0; j< cols; j++)
+            is >> board[i][j];
+            GaussMatrix.insertElement(i, j, test[i][j])
+  
+  if(rows < cols - 1) return 1;
+  return 0;
+
+  /*int rows = 3;
   int cols = 4;
   double test[3][4] = {{1,2,3,4},
                        {5,6,7,8},
@@ -22,7 +53,7 @@ int readFromFile(Matrix& GaussMatrix)
     } 
   }
   if(rows < cols - 1) return 1;
-  return 0;
+  return 0;*/
 }
 int main(int argc, char *argv[])
 {
