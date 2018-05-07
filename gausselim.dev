@@ -38,7 +38,7 @@ ProductName=
 ProductVersion=
 AutoIncBuildNrOnRebuild=0
 AutoIncBuildNrOnCompile=0
-UnitCount=3
+UnitCount=5
 
 [Profile1]
 ProfileName=MingW gcc
@@ -110,6 +110,26 @@ BuildCmd=
 FileName=matrix.cpp
 CompileCpp=1
 Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit5]
+FileName=sigfigs.h
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit4]
+FileName=sigfigs.cpp
+CompileCpp=1
+Folder=gausselim
 Compile=1
 Link=1
 Priority=1000

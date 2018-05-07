@@ -1,8 +1,4 @@
-#include <iostream>
-#include <iomanip>
-#include <cmath>
-
-using namespace std;
+#include "sigfigs.h"
 
 double absv(double num)
 {
@@ -33,9 +29,7 @@ void printDouble(ostream& out, double num, int setS)
   }
   //counts total number of sigfigs based on base expt
   double log_10 = log10(absv(num));
-  cout << log_10 << endl; 
   int digits = trunc(log_10); //gets integer part only
-  cout << digits << endl;
   if(log_10 >= 0 && digits <= 5)
   {
     if(set < digits) //sigfigs leave integers only

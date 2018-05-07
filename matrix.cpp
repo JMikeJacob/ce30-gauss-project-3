@@ -1,4 +1,5 @@
 #include "matrix.h"
+#include "sigfigs.h"
 
 double Matrix::absv(double value)
 {
@@ -9,17 +10,46 @@ void Matrix::initMatrix(int rowS, int colS)
 {
   rows = rowS;
   cols = colS;
+  origRows = rowS;
+  origCols = colS;
   cell = new double*[rows];
+  origMatrix = new double*[rows];
   for(int i = 0; i < rows; i++)
   {
     cell[i] = new double[cols];
+    origMatrix[i] = new double[cols];
   }
   solutions = new double[rows];
 }
 
-void Matrix::insertElement(int rowE, int colE, double value)
+int Matrix::readFromFile(string filename)
 {
-  cell[rowE][colE] = value;
+  int rows = 0, cols = 0;
+  double insert = 0.0;
+    
+  ifstream is;
+  is.open(filename.c_str());
+  if (!is)
+  {
+    return -1;
+  }
+  // Read the data
+  is >> rows >> cols;
+  initMatrix(rows,cols);
+  for (int i = 0; i < rows; i++)
+  {
+    for (int j = 0; j < cols; j++)
+    {
+      is >> cell[i][j];
+      origMatrix[i][j] = cell[i][j];
+    }
+  }
+  
+  if(rows < cols - 1)
+  { 
+    return 1;
+  }
+  return 0;
 }
 
 void Matrix::switchRows(int row1, int row2)
@@ -40,7 +70,6 @@ int Matrix::identifyPivot(int midRow, int pivotCol)
   
   for(int i = midRow + 1; i < rows; i++)
   {
-   // if(cell[i][pivotCol] == 0) continue;
     if(absv(cell[i][pivotCol]) > pivot)
     {
       pivot = absv(cell[i][pivotCol]);
@@ -73,6 +102,10 @@ int Matrix::checkZeroRows(int midRow)
     }
     if(countZeroes == cols - midRow)
     { // 0 = 0
+      if(displaySteps)
+      {
+        cout << "Duplicate linear equation detected." << endl;
+      }
       if(rows - 1 < cols - 1)
       {
         return 1; 
@@ -81,15 +114,18 @@ int Matrix::checkZeroRows(int midRow)
       {
         switchRows(rows-1, i);
         rows--;
-	cout << "0 = 0 detected. System can still have unique solution!" << endl;
-	cout << "Remove 0 = 0 Row: " << endl;
-	printMatrix();
+        if(displaySteps)
+        {
+	        cout << "System can still have unique solution!" << endl;
+	        cout << "Remove 0 = 0 Row: " << endl;
+          printMatrix();
+        }
       }
     }
     else if(countZeroes == cols - midRow - 1)
     { //k = 0, k =/= 0
       return 2; 
-     }   
+    }   
   }
   return 0;
 }
@@ -127,9 +163,12 @@ int Matrix::gaussElim()
     {
       switchRows(i, pivotRow); 
     }
-    cout << "Iteration " << i + 1 << ": " << endl;
-    cout << "Pivot Row " << pivotRow + 1 << endl;
-    printMatrix();
+    if(displaySteps)
+    {
+      cout << "Iteration " << i + 1 << ": " << endl;
+      cout << "Pivot Row " << pivotRow + 1 << endl;
+      printMatrix();
+    }
     for(int j = i + 1; j < rows; j++)
     {
       if(cell[j][pivotCol] == 0)
@@ -146,9 +185,12 @@ int Matrix::gaussElim()
         } 
       }
     }
-    cout << "\nReduce Column " << pivotCol << " to Zero: " << endl;
-    printMatrix();
-    cout << endl;
+    if(displaySteps)
+    {
+      cout << "\nReduce Column " << pivotCol << " to Zero: " << endl;
+      printMatrix();
+      cout << endl;
+    }
   }
   zeroCase = checkZeroRows(rows-1);
   return zeroCase; 
@@ -157,6 +199,7 @@ int Matrix::gaussElim()
 void Matrix::solveSystem()
 {
   //back substition
+  cout << endl;
   for(int i = rows - 1; i >= 0; i--)
   {
     solutions[i] = cell[i][cols-1] / cell[i][i];
@@ -164,7 +207,7 @@ void Matrix::solveSystem()
     {
       solutions[i] -= cell[i][j]*solutions[j] / cell[i][i]; 
     }
-    cout << "x" << rows - i << " = " << solutions[i] << endl; 
+      cout << "x" << rows - i << " = " << solutions[i] << endl;
   }
   //printSolutions(); 
 }
@@ -179,6 +222,82 @@ void Matrix::printMatrix()
     }
     cout << endl; 
   } 
+}
+
+int Matrix::saveToFile(int status)
+{
+  char saveToFile;
+  string save;
+  int setS = 0;
+  cout << "Do you want to save the results to a text file (Y/N)?";
+  cin.get(saveToFile);
+  cin.clear();
+  cin.sync();
+  if (saveToFile == 'y' || saveToFile == 'Y')
+  {
+    cout<< "Filename: ";
+    cin >> save;
+    cin.sync();
+    cin.clear();
+    if(save.find(".txt") == string::npos) //adds file extension
+    {
+      save = save + ".txt";
+    }
+    ofstream data;
+    data.open(save.c_str());
+    if(data.is_open()==true)
+    {
+      cout<<"How many significant figures?"<< endl;
+      cout<< "Answer: ";
+      cin>> setS;
+      cin.sync();
+      cin.clear();
+      for(int i=0; i < origRows; i++) //original matrix
+      {
+        for(int j=0; j< origCols; j++)
+        {
+          printDouble(data, cell[i][j], setS);
+          data << " ";
+        }
+        data << endl;
+      }
+      data << endl;
+      switch(status)
+      {
+        case 0:
+          for(int i = 0; i < rows; i++)
+          {
+            data << "x" << i+1 << " = ";
+            printDouble(data, solutions[i], setS);
+            data << endl; 
+          } 
+          break;
+        case 1:
+          data << "No unique solution!" << endl;
+          break;
+        case 2:
+          data << "System is inconsistent." << endl;
+          break;
+        default:
+          data << "Error occurred." << endl;
+          break; 
+      }
+      return 0;
+    }
+    else
+    {
+      cout << "Error in loading file!"<< endl;
+      return 0;
+    }
+  }
+  else if (saveToFile== 'n' || saveToFile == 'N')
+  {
+      return 0;
+  }
+  else
+  {
+    return -1; 
+  }
 }
 
 void Matrix::deleteArrays()

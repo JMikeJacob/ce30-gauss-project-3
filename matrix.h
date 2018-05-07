@@ -2,18 +2,21 @@
 #define MATRIX_H
 
 #include <iostream>
+#include <fstream>
+#include <string>
 
 using namespace std;
 
 class Matrix
 {
   private:
-    int rows;
-    int cols;
-    int size;
+    int rows, origRows;
+    int cols, origCols;
+    double** origMatrix;
     double** cell;
     double* solutions;
   public:
+    bool displaySteps;
     double absv(double value);
     void initMatrix(int, int);
     void printMatrix();
@@ -23,7 +26,8 @@ class Matrix
     int identifyPivot(int, int);
     int gaussElim();
     void solveSystem();
-//    void printSolutions();
+    int readFromFile(string);
+    int saveToFile(int);
     int checkZeroRows(int);
 };
 

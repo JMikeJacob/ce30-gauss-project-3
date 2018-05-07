@@ -1,14 +1,14 @@
 # Project: gausselim
 # Compiler: Default GCC compiler
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ IDE 7.4.2.569 on 01/05/18 09:50
+# Makefile created by wxDev-C++ IDE 7.4.2.569 on 07/05/18 09:33
 
 WXLIBNAME = wxmsw29u
 CPP       = g++.exe
 CC        = gcc.exe
 WINDRES   = "windres.exe"
-OBJ       = Objects/MingW/main.o Objects/MingW/matrix.o
-LINKOBJ   = "Objects/MingW/main.o" "Objects/MingW/matrix.o"
+OBJ       = Objects/MingW/main.o Objects/MingW/matrix.o Objects/MingW/sigfigs.o
+LINKOBJ   = "Objects/MingW/main.o" "Objects/MingW/matrix.o" "Objects/MingW/sigfigs.o"
 LIBS      = -L"C:/Program Files (x86)/Dev-Cpp/lib/wx/gcc_lib" -L"C:/Program Files (x86)/Dev-Cpp/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW32/lib"  
 INCS      = -I"C:/Program Files (x86)/Dev-Cpp/MinGW32/include"
 CXXINCS   = -I"C:/Program Files (x86)/Dev-Cpp/MinGW32/include" -I"C:/Program Files (x86)/Dev-Cpp/" -I"C:/Program Files (x86)/Dev-Cpp/include/common"
@@ -41,3 +41,6 @@ Objects/MingW/main.o: $(GLOBALDEPS) main.cpp
 
 Objects/MingW/matrix.o: $(GLOBALDEPS) matrix.cpp
 	$(CPP) -c matrix.cpp -o Objects/MingW/matrix.o $(CXXFLAGS)
+
+Objects/MingW/sigfigs.o: $(GLOBALDEPS) sigfigs.cpp
+	$(CPP) -c sigfigs.cpp -o Objects/MingW/sigfigs.o $(CXXFLAGS)
