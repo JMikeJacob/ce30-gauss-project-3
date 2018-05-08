@@ -1,7 +1,7 @@
 # Project: gausselim
 # Compiler: Default GCC compiler
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ IDE 7.4.2.569 on 07/05/18 09:33
+# Makefile created by wxDev-C++ IDE 7.4.2.569 on 08/05/18 05:53
 
 WXLIBNAME = wxmsw29u
 CPP       = g++.exe

@@ -1,7 +1,7 @@
 [Project]
 FileName=gausselim.dev
 Name=gausselim
-UnitCount=3
+UnitCount=5
 PchHead=-1
 PchSource=-1
 Ver=3
@@ -119,7 +119,7 @@ BuildCmd=
 [Unit5]
 FileName=sigfigs.h
 CompileCpp=1
-Folder=
+Folder=gausselim
 Compile=1
 Link=1
 Priority=1000

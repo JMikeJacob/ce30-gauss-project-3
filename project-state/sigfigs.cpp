@@ -1,12 +1,12 @@
 #include "sigfigs.h"
 
 double absv(double num)
-{
+{ //absolute value function
   return num*((num>0)-(num<0)); 
 }
 
 int exp(int num, int power)
-{
+{ //power function: num ^ power
   int product = 1;
   for(int i = 0; i < power; i++)
   {
@@ -35,9 +35,12 @@ void printDouble(ostream& out, double num, int setS)
     if(set < digits) //sigfigs leave integers only
     { //e.g. 123456.789 -> 123460 in 5 sigfigs
       int intNum = round(num); //rounds integer (123457)
-      int power = exp(10, digits - set); //gets number of zeroes (e.g. 5 sigfigs for 123457: 10)
+      int power = exp(10, digits - set);//gets number of zeroes (e.g.
+                                        // 5 sigfigs for 123457: 10)
       int remove = intNum % (power*10); //for rounder (57)
-      int rounder = (remove % exp(10, log10(remove)))/exp(10, log10(remove) - 1);//gets digit next to last sigfig digit (7)
+      int rounder = (remove % exp(10, log10(remove)))
+                     /exp(10, log10(remove) - 1);
+                     //gets digit next to last sigfig digit (7)
       intNum = intNum/power; //divide number by 10^x (12345)
       intNum = intNum * power; //put necessary zeroes (123450)
       if(rounder >= 5)
