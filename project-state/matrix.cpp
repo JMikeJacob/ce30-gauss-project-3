@@ -29,9 +29,8 @@ int Matrix::readFromFile(string filename)
   int rows = 0, cols = 0;
   double insert = 0.0;
     
-  ifstream is;
-  is.open(filename.c_str());
-  if (!is) //file cannot be opened
+  ifstream is(filename.c_str());
+  if (!is.is_open()) //file cannot be opened
   {
     return -1;
   }
@@ -168,7 +167,7 @@ int Matrix::gaussElim()
     }
     if(displaySteps) //display current step
     {
-      cout << "Iteration " << i + 1 << ": " << endl;
+      cout << endl << "Iteration " << i + 1 << ": " << endl;
       cout << "Pivot Row " << pivotRow + 1 << endl;
       printMatrix();
     }
